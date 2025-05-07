@@ -1,11 +1,15 @@
+import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import { food_list } from "../assets/assets";
+// import { food_list } from "../assets/assets";
 
 export const Storecontext = createContext(null);
 
 const StorecontextProvider = (props) => {
 
     const [cartItems, setCartItems] = useState({});
+    const url = "http://localhost:4000"
+    const [token, setToken] = useState("");
+    const [food_list, setFoodList] = useState([])  //fetching the data of the menu from the database
 
     //add to cart
     const addToCart = (itemId) => {
@@ -17,8 +21,11 @@ const StorecontextProvider = (props) => {
         }
     }
 
-    const removeFromCart = (itemId) => {
-        setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
+    const removeFromCart = async (itemId) => {
+        setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+        if (token) {             //this means that the user is logged in
+            await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
+        }
     }
 
 
@@ -33,13 +40,40 @@ const StorecontextProvider = (props) => {
         }
         return totalAmount;
     }
+
+    const fetchFoodList = async () => {
+        const response = await axios.get(url + "/api/food/list");
+        setFoodList(response.data.data)
+    }
+
+    const loadCartData = async (token) => {
+        const response = await axios.post(url + "/api/cart/get", {}, { headers: (token) });
+        setCartItems(response.data.CartData);
+    }
+
+    useEffect(() => {
+        // to run the above fetchFoodList when the webpage is loading
+        async function loadData() {
+            await fetchFoodList();
+            if (localStorage.getItem("token")) {             //when the webpage is refreshed, the user won't get logged out.
+                setToken(localStorage.getItem("token"));
+                await loadCartData(localStorage.getItem("token"));
+            }
+
+        }
+        loadData();
+    }, [])
+
     const contextValue = {
         food_list,
         cartItems,
         setCartItems,
         addToCart,
         removeFromCart,
-        getTotalCartAmount
+        getTotalCartAmount,
+        url,
+        token,
+        setToken
     }
 
     return (

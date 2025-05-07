@@ -5,7 +5,7 @@ import { food_list } from '../../assets/assets';
 import { useNavigate } from 'react-router';
 
 const Cart = () => {
-    const { cartItems, food_lists, removeFromCart, getTotalCartAmount} = useContext(Storecontext);
+    const { cartItems, food_lists, removeFromCart, getTotalCartAmount,url} = useContext(Storecontext);
     const navigate= useNavigate();
 
     return (
@@ -25,8 +25,9 @@ const Cart = () => {
                     // If food available and user place the order, then display in cart too through clicking in basket sign
                     if (cartItems[item._id] > 0) {
                         return (
-                            <div className='cart-items-title cart-items-item'>
-                                <img src={item.image} alt="" />
+                            // <div key={item._id} className='cart-items-title cart-items-item'>
+                             <div className='cart-items-title cart-items-item'> 
+                                <img src={url+"/images/"+item.image} alt="" />
                                 <p>{item.name}</p>
                                 <p>${item.price}</p>
                                 {/* return the quantity for the product */}
