@@ -12,12 +12,15 @@ const StorecontextProvider = (props) => {
     const [food_list, setFoodList] = useState([])  //fetching the data of the menu from the database
 
     //add to cart
-    const addToCart = (itemId) => {
+    const addToCart = async (itemId) => {
         if (!cartItems[itemId]) {             //create new entry for our food products
             setCartItems((prev) => ({ ...prev, [itemId]: 1 }))
         }
         else {                                //if product is already avaiable and it will increase the value by 1
             setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
+        }
+        if (token) {             //this means that the user is logged in
+            await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
         }
     }
 
@@ -42,24 +45,37 @@ const StorecontextProvider = (props) => {
     }
 
     const fetchFoodList = async () => {
-        const response = await axios.get(url + "/api/food/list");
-        setFoodList(response.data.data)
+        try {
+            const response = await axios.get(url + "/api/food/list");
+            if (response.data.success) {
+                setFoodList(response.data.data);
+            } else {
+                console.error("Failed to fetch food list:", response.data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching food list:", error);
+        }
     }
 
     const loadCartData = async (token) => {
-        const response = await axios.post(url + "/api/cart/get", {}, { headers: (token) });
-        setCartItems(response.data.CartData);
+        const response = await axios.post(url + "/api/cart/get", {}, { 
+            headers: { token: token } 
+        });
+        setCartItems(response.data.cartData);
     }
 
     useEffect(() => {
-        // to run the above fetchFoodList when the webpage is loading
         async function loadData() {
-            await fetchFoodList();
-            if (localStorage.getItem("token")) {             //when the webpage is refreshed, the user won't get logged out.
-                setToken(localStorage.getItem("token"));
-                await loadCartData(localStorage.getItem("token"));
+            try {
+                await fetchFoodList();
+                const storedToken = localStorage.getItem("token");
+                if (storedToken) {
+                    setToken(storedToken);
+                    await loadCartData(storedToken);
+                }
+            } catch (error) {
+                console.error("Error loading data:", error);
             }
-
         }
         loadData();
     }, [])

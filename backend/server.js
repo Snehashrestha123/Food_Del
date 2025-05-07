@@ -19,7 +19,10 @@ const port = 4000    //where our server will be running
 
 // middleware, here we initialize our middleware
 app.use(express.json())   //using this middleware, whenever we get the request from frontend to backend, that will be passed using json
-app.use(cors()) //using this we can access the backend from any frontend
+app.use(cors({
+    origin: 'http://localhost:5173', // or whatever port your frontend is running on
+    credentials: true
+})) //using this we can access the backend from any frontend
 
 //db connection
 connectDB();
