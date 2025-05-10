@@ -25,3 +25,7 @@ const Fooddisplay = ({ category }) => {
 }
 
 export default Fooddisplay
+
+
+
+

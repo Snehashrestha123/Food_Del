@@ -5,22 +5,21 @@ import fs from 'fs'    //file system which is pre build in node.js
 // add food item
 
 const addFood = async (req, res) => {
-    //logic to store data in database
-    let image_filename = `${req.file.filename}`;
-    const food = new foodModel({
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        category: req.body.category,
-        image: image_filename
-    })
-
     try {
+        let image_filename = `${req.file.filename}`;
+        const food = new foodModel({
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            category: req.body.category,
+            image: image_filename
+        })
+
         await food.save();
         res.json({ success: true, message: "Food Added" })
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: "Error" })
+        console.error("Error adding food:", error);
+        res.json({ success: false, message: "Error adding food item" })
     }
 }
 
@@ -29,10 +28,11 @@ const addFood = async (req, res) => {
 const listFood = async (req, res) => {
     try {
         const foods = await foodModel.find({});
+        console.log("Found foods:", foods); // Debug log
         res.json({ success: true, data: foods })
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: "Error" })
+        console.error("Error fetching food list:", error);
+        res.json({ success: false, message: "Error fetching food list" })
     }
 }
 
@@ -41,15 +41,22 @@ const listFood = async (req, res) => {
 
 const removeFood = async (req, res) => {
     try {
-        const food = await foodModel.findById(req.body.id);  //Id created automatically and by id it finds the product
-        fs.unlink(`uploads/${food.image}`, () => { }) //delete image from upload folder
+        const food = await foodModel.findById(req.body.id);
+        if (!food) {
+            return res.json({ success: false, message: "Food item not found" });
+        }
 
-        await foodModel.findByIdAndDelete(req.body.id);   //delete in database
+        // Delete image file
+        const imagePath = `uploads/${food.image}`;
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+        }
+
+        await foodModel.findByIdAndDelete(req.body.id);
         res.json({ success: true, message: "Food Removed" })
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: "Error" })
-
+        console.error("Error removing food:", error);
+        res.json({ success: false, message: "Error removing food item" })
     }
 }
 
