@@ -25,11 +25,10 @@ const List = ({url}) => {
     }
 
     const removeFood = async (foodId) => {
-        // Show confirmation dialog
         const isConfirmed = window.confirm("Do you want to delete this food item?");
         
         if (!isConfirmed) {
-            return; // Exit if user clicks Cancel
+            return; 
         }
 
         try {
@@ -68,7 +67,7 @@ const List = ({url}) => {
                             <img src={`${url}/images/` + item.image} alt={item.name} /> 
                             <p>{item.name}</p>
                             <p>{item.category}</p>
-                            <p>${item.price}</p>
+                            <p>Rs.{item.price}</p>
                             <p onClick={() => removeFood(item._id)} className='cursor'>X</p>
                         </div>
                     )

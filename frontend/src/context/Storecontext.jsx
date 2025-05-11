@@ -177,12 +177,11 @@ const StorecontextProvider = (props) => {
         }
     }
 
-    // Load initial data
     useEffect(() => {
         async function loadData() {
             try {
                 await fetchFoodList();
-                // If we have a token, load cart data
+             
                 if (token) {
                     await loadCartData(token);
                 }
@@ -191,7 +190,7 @@ const StorecontextProvider = (props) => {
             }
         }
         loadData();
-    }, [token]); // Add token as dependency
+    }, [token]); 
 
     const contextValue = {
         food_list,

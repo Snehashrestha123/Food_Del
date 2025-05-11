@@ -21,7 +21,7 @@ const App = () => {
     return children;
   };
 
-  // Don't show login popup on initial load if token exists
+ 
   useEffect(() => {
     if (token) {
       setShowLogin(false);

@@ -47,7 +47,7 @@
     border: none;
 }
 
-/* To make footer section responsive */
+
 @media (max-width:750px) {
     .footer-content{
         display: flex;

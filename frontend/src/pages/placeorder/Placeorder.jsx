@@ -22,20 +22,19 @@ const Placeorder = () => {
                     <div>
                         <div className="cart-total-details">
                             <p>Subtotal</p>
-                            <p>${getTotalCartAmount()}</p>
+                            <p>Rs.{getTotalCartAmount()}</p>
                         </div>
                         <hr />
 
                         <div className="cart-total-details">
                             <p>Delivery fee</p>
-                            <p>${2}</p>
+                            <p>Rs.{2}</p>
                         </div>
                         <hr />
 
                         <div className="cart-total-details">
                             <p>Total</p>
-                            {/* subtotal + delivery charge */}
-                            <p>${getTotalCartAmount()+2}</p>    
+                            <p>Rs.{getTotalCartAmount()+2}</p>    
                         </div>
 
                     </div>

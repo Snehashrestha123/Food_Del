@@ -5,8 +5,8 @@ import { food_list } from '../../assets/assets';
 import { useNavigate } from 'react-router';
 
 const Cart = () => {
-    const { cartItems, food_list, removeFromCart, getTotalCartAmount,url} = useContext(Storecontext);
-    const navigate= useNavigate();
+    const { cartItems, food_list, removeFromCart, getTotalCartAmount, url } = useContext(Storecontext);
+    const navigate = useNavigate();
 
     return (
         <div className='cart'>
@@ -22,19 +22,16 @@ const Cart = () => {
                 <br />
                 <hr />
                 {food_list.map((item, index) => {
-                    // If food available and user place the order, then display in cart too through clicking in basket sign
                     if (cartItems[item._id] > 0) {
                         return (
-                             <div key={item._id} className='cart-items-title cart-items-item'>
-                             {/* <div className='cart-items-title cart-items-item'>  */}
-                                <img src={url+"/images/"+item.image} alt="" />
-                                <p>{item.name}</p> 
-                                <p>${item.price}</p>
-                                {/* return the quantity for the product */}
+                            <div key={item._id} className='cart-items-title cart-items-item'>
+                                {/* <div className='cart-items-title cart-items-item'>  */}
+                                <img src={url + "/images/" + item.image} alt="" />
+                                <p>{item.name}</p>
+                                <p>Rs.{item.price}</p>
                                 <p>{cartItems[item._id]}</p>
-                                {/* Calculates the total price, price*quantity */}
-                                <p>${item.price * cartItems[item._id]}</p>
-                                <p onClick={()=>removeFromCart(item._id)} className='cross'>X</p>
+                                <p>Rs.{item.price * cartItems[item._id]}</p>
+                                <p onClick={() => removeFromCart(item._id)} className='cross'>X</p>
                             </div>
                         )
                     }
@@ -46,25 +43,23 @@ const Cart = () => {
                     <div>
                         <div className="cart-total-details">
                             <p>Subtotal</p>
-                            <p>${getTotalCartAmount()}</p>
+                            <p>Rs.{getTotalCartAmount()}</p>
                         </div>
                         <hr />
 
                         <div className="cart-total-details">
                             <p>Delivery fee</p>
-                            <p>${2}</p>
+                            <p>Rs.{2}</p>
                         </div>
                         <hr />
 
                         <div className="cart-total-details">
                             <p>Total</p>
-                            {/* subtotal + delivery charge */}
-                            <p>${getTotalCartAmount()+2}</p>    
+                            <p>Rs.{getTotalCartAmount() + 2}</p>
                         </div>
 
                     </div>
-                    <button onClick={()=>navigate('/order')}>Proceed to checkout</button>
-                    {/* We have use order because in app file we have use order */}
+                    <button onClick={() => navigate('/order')}>Proceed to checkout</button>
                 </div>
             </div>
 

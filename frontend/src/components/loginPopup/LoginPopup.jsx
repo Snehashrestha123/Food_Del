@@ -26,7 +26,7 @@ const LoginPopup = ({setShowLogin}) => {
 
   const onLogin = async (event) => {
     event.preventDefault()    //to prevent the page from reloading
-    // logic to call api for which we need axios support in the frontend
+  
     let newUrl = url;
     if (currState == "Login") {
       newUrl += "/api/user/login"      //checks whether the current state is login or not
@@ -36,11 +36,11 @@ const LoginPopup = ({setShowLogin}) => {
     }
 
     //call api
-    const response = await axios.post(newUrl, data);   //post because we have created login and register using the POST method
+    const response = await axios.post(newUrl, data);   
     if (response.data.success) {   //if this is true that means the user is logged in
       setToken(response.data.token);
       localStorage.setItem("token", response.data.token);
-      setShowLogin(false)   //loginpage will be hidden
+      setShowLogin(false)   
 
     }
     else {
@@ -61,10 +61,10 @@ const LoginPopup = ({setShowLogin}) => {
           <input name='password' onChange={onChangeHandler} value={data.password} type="password" placeholder='Your password' required />
         </div>
         <button type='submit' >{currState === "Sign up" ? "Create account" : "Login"}</button>
-        <div className="login-popup-condition">
+        {/* <div className="login-popup-condition">
           <input type="checkbox" required />
           <p>By continuing, I agree the terms and policies</p>
-        </div>
+        </div> */}
         {currState === "Login"
           ? <p>Create a new account? <span onClick={() => setCurrState("Sign up")}>Click Here!</span></p>
           : <p>Already have an account? <span onClick={() => setCurrState("Login")}>Login Here</span></p>

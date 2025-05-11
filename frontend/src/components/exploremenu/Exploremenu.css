@@ -55,7 +55,6 @@
     padding: 2px;   
 }
 
-/* To make explore menu section responsive */
 @media (max-width:1050px){
     .explore-menu-text{
         max-width: 100%;
